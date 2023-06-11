@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Drag and Drop - By Manaswini</title>
+    <style>
+      .container-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        width: 200px;
+        height: 300px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin: 10px;
+      }
+
+      .item {
+        border: 1px solid #ccc;
+        padding: 5px;
+        margin-bottom: 5px;
+        cursor: move;
+      }
+
+      .success-message {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+        padding: 10px;
+        margin-bottom: 10px;
+        display: none;
+      }
+
+      .reset-button {
+        margin-top: 10px;
+      }
+
+      @media screen and (max-width: 600px) {
+        .container {
+          width: 100%;
+          margin: 10px 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Drag and Drop - By Manaswini</h2>
+    <div class="container-wrapper">
+      <div class="container" id="container1">
+        <img
+          class="item"
+          id="item1"
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmb7_TvsmR9jww4MRrXVqFbb5V7RgGyC8EwQ&usqp=CAU"
+          alt="Image 1"
+          draggable="true"
+          style="width: 2cm; height: 2cm"
+        />
+        <img
+          class="item"
+          id="item2"
+          src="https://cdn-icons-png.flaticon.com/128/251/251675.png"
+          alt="Image 2"
+          draggable="true"
+          style="width: 2cm; height: 2cm"
+        />
+        <img
+          class="item"
+          id="item3"
+          src="https://cdn.pixabay.com/photo/2015/07/29/22/56/taj-mahal-866692_1280.jpg"
+          alt="Image 3"
+          draggable="true"
+          style="width: 2cm; height: 2cm"
+        />
+      </div>
+
+      <div class="container" id="container2"></div>
+    </div>
+
+    <div class="success-message" id="successMessage" ondrop="drop(event)">
+      Item dropped successfully!
+    </div>
+
+    <button class="reset-button" onclick="reset()">Reset</button>
+
+    <script>
+      // Initialize the event listeners for drag and drop
+      function initializeDragAndDrop() {
+        const items = document.querySelectorAll(".item");
+        const containers = document.querySelectorAll(".container");
+
+        items.forEach((item) => {
+          item.addEventListener("dragstart", dragStart);
+        });
+
+        containers.forEach((container) => {
+          container.addEventListener("dragover", dragOver);
+          container.addEventListener("dragenter", dragEnter);
+          container.addEventListener("dragleave", dragLeave);
+          container.addEventListener("drop", drop);
+        });
+      }
+
+      //dragStart function
+      function dragStart(event) {
+        event.dataTransfer.setData("text/plain", event.target.id);
+        event.currentTarget.style.opacity = "0.4";
+      }
+
+      //dragOver function
+      function dragOver(event) {
+        event.preventDefault();
+      }
+
+      //dragEnter function
+      function dragEnter(event) {
+        event.currentTarget.style.border = "2px dashed #ccc";
+      }
+
+      //dragLeave function
+      function dragLeave(event) {
+        event.currentTarget.style.border = "1px solid #ccc";
+      }
+
+      //drop function
+      function drop(event) {
+        event.preventDefault();
+        const data = event.dataTransfer.getData("text/plain");
+
+        // Cloning the dragged item
+        const draggedItem = document.getElementById(data).cloneNode(true);
+        event.currentTarget.appendChild(draggedItem);
+
+        event.currentTarget.style.border = "1px solid #ccc";
+
+        //opacity to 1
+        const container2Items = document
+          .getElementById("container2")
+          .querySelectorAll(".item");
+
+        container2Items.forEach((item) => {
+          item.style.opacity = "1";
+        });
+
+        //displaying success message
+        const successMessage = document.getElementById("successMessage");
+        successMessage.style.display = "block";
+        setTimeout(function () {
+          successMessage.style.display = "none";
+        }, 2000);
+      }
+
+      //reset function
+      function reset() {
+        const container1 = document.getElementById("container1");
+        const container2 = document.getElementById("container2");
+
+        container1.innerHTML = `
+      <img class="item" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmb7_TvsmR9jww4MRrXVqFbb5V7RgGyC8EwQ&usqp=CAU" alt="Image 1" draggable="true" style="width: 2cm; height: 2cm;">
+      <img class="item" src="https://cdn-icons-png.flaticon.com/128/251/251675.png" alt="Image 2" draggable="true" style="width: 2cm; height: 2cm;">
+      <img class="item" src="https://cdn.pixabay.com/photo/2015/07/29/22/56/taj-mahal-866692_1280.jpg" alt="Image 3" draggable="true" style="width: 2cm; height: 2cm;">
+      `;
+
+        container2.innerHTML = "";
+      }
+
+      initializeDragAndDrop();
+    </script>
+  </body>
+</html>
